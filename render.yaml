@@ -20,8 +20,6 @@ services:
         value: https://kabon-hotel1-frontend.vercel.app
       - key: CSRF_TRUSTED_ORIGINS
         value: https://kabon-hotel1-frontend.vercel.app
-      - key: PORT
-        value: "8000"
 
 databases:
   - name: kabon-hotel-db
