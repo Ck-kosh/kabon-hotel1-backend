@@ -15,7 +15,16 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-kabon-hotel-secret-key-202
 
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+def split_env_list(value: str, default: str):
+    return [item.strip() for item in os.getenv(value, default).split(',') if item.strip()]
+
+
+ALLOWED_HOSTS = split_env_list('ALLOWED_HOSTS', 'localhost,127.0.0.1')
+CSRF_TRUSTED_ORIGINS = split_env_list(
+    'CSRF_TRUSTED_ORIGINS',
+    'http://localhost:5173,http://127.0.0.1:5173'
+)
 
 # Application definition
 INSTALLED_APPS = [
@@ -138,12 +147,15 @@ SIMPLE_JWT = {
 }
 
 # CORS
-CORS_ALLOWED_ORIGINS = os.getenv(
+CORS_ALLOWED_ORIGINS = split_env_list(
     'CORS_ALLOWED_ORIGINS',
+    
     'http://localhost:5173,http://127.0.0.1:5173'
-).split(',')
+)
 
 CORS_ALLOW_CREDENTIALS = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # DRF Spectacular
 SPECTACULAR_SETTINGS = {
