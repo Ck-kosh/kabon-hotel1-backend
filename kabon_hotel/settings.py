@@ -166,16 +166,12 @@ CORS_ALLOWED_ORIGINS = split_env_list(
 
 CORS_ALLOW_CREDENTIALS = True
 
-<<<<<<< HEAD
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-=======
 # Security (production only)
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
->>>>>>> 6f06c74 (change of files)
 
 # DRF Spectacular
 SPECTACULAR_SETTINGS = {
