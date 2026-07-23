@@ -95,7 +95,6 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 
-# ==================== PUBLIC VIEWS (No Auth Required) ====================
 
 class HomePageContentListView(generics.ListAPIView):
     """List all active homepage content sections."""
@@ -111,7 +110,7 @@ class ContactInformationListView(generics.ListAPIView):
     permission_classes = [AllowAny]
 
 
-# ==================== PROTECTED VIEWS (Auth Required) ====================
+# PROTECTED VIEWS (Auth Required)
 
 class ServiceCategoryListView(generics.ListAPIView):
     """List all active service categories."""

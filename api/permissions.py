@@ -17,8 +17,11 @@ class IsClientOrAdmin(permissions.BasePermission):
         return request.user.is_client or request.user.is_admin
 
 
+
 class IsOwnerOrAdmin(permissions.BasePermission):
     """Permission to only allow owners of an object or admins."""
+
+
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_admin:
