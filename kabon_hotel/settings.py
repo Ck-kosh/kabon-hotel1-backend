@@ -80,12 +80,33 @@ TEMPLATES = [
 WSGI_APPLICATION = 'kabon_hotel.wsgi.application'
 
 # Database: Render supplies DATABASE_URL for a managed PostgreSQL database.
-database_url = os.getenv('DATABASE_URL')
+database_url = os.getenv('DATABASE_URL', '').strip()
+if database_url in {'', '://'}:
+    database_url = ''
+
+if not database_url:
+    database_host = os.getenv('DB_HOST') or os.getenv('POSTGRES_HOST')
+    database_name = os.getenv('DB_NAME') or os.getenv('POSTGRES_DB')
+    database_user = os.getenv('DB_USER') or os.getenv('POSTGRES_USER')
+    database_password = os.getenv('DB_PASSWORD') or os.getenv('POSTGRES_PASSWORD')
+    database_port = os.getenv('DB_PORT') or os.getenv('POSTGRES_PORT', '5432')
+    if all((database_host, database_name, database_user, database_password)):
+        database_url = (
+            f'postgresql://{database_user}:{database_password}'
+            f'@{database_host}:{database_port}/{database_name}'
+        )
+
 if database_url:
     database_options = {'conn_max_age': 600}
     if database_url.startswith(('postgres://', 'postgresql://')):
         database_options['ssl_require'] = not DEBUG
-    DATABASES = {'default': dj_database_url.parse(database_url, **database_options)}
+    try:
+        DATABASES = {'default': dj_database_url.parse(database_url, **database_options)}
+    except Exception as exc:
+        raise ImproperlyConfigured(
+            'DATABASE_URL must be a valid PostgreSQL URL, for example '
+            'postgresql://user:password@host:5432/database.'
+        ) from exc
 elif DEBUG:
     DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': BASE_DIR / 'db.sqlite3'}}
 else:
