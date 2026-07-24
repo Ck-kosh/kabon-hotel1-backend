@@ -6,8 +6,11 @@ __pycache__/
 *.pyd
 .env
 db.sqlite3
+*.sqlite3
 staticfiles/
 media/
+*.log
+render.yaml.bak
 node_modules/
 dist/
 .DS_Store
