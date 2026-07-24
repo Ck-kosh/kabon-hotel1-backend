@@ -27,8 +27,9 @@ CSRF_TRUSTED_ORIGINS = split_env_list(
     'http://localhost:5173,http://127.0.0.1:5173'
 )
 
+# Allow all render/railway subdomains automatically
 if not DEBUG:
-    ALLOWED_HOSTS += ['.onrender.com']
+    ALLOWED_HOSTS += ['.onrender.com', '.railway.app', '.up.railway.app']
 
 # Application definition
 INSTALLED_APPS = [
@@ -79,16 +80,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kabon_hotel.wsgi.application'
 
-# Database: use Render PostgreSQL in production and SQLite for local development.
+# Database
 DATABASE_URL = os.getenv('DATABASE_URL')
 if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
+    DATABASES = {'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)}
 else:
     DATABASES = {
         'default': {
@@ -119,7 +114,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# Static files
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -171,7 +166,12 @@ CORS_ALLOWED_ORIGINS = split_env_list(
 
 CORS_ALLOW_CREDENTIALS = True
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# Security (production only)
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = True

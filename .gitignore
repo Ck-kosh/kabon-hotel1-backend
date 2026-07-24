@@ -1,8 +1,13 @@
 venv/
 __pycache__/
+**/__pycache__/
 *.pyc
 *.pyo
-db.sqlite3
+*.pyd
 .env
+db.sqlite3
 staticfiles/
 media/
+node_modules/
+dist/
+.DS_Store
